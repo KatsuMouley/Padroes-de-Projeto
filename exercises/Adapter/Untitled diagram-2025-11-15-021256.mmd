@@ -1,0 +1,71 @@
+classDiagram
+    direction RL
+
+    class GerenciadorMidiaSocial {
+        +adicionarPlataforma(ISocialMediaAdapter)
+        +postarEmTudo(ConteudoUnificado)
+    }
+
+    class ConteudoUnificado
+    class RespostaUnificada
+
+    GerenciadorMidiaSocial o-- "1..*" ISocialMediaAdapter : plataformas
+    GerenciadorMidiaSocial ..> ConteudoUnificado : usa
+    GerenciadorMidiaSocial ..> RespostaUnificada : usa
+
+    <<interface>> ISocialMediaAdapter
+    ISocialMediaAdapter : +autenticar(user, token)
+    ISocialMediaAdapter : +postar(ConteudoUnificado) RespostaUnificada
+
+    class TwitterAdapter {
+        -twitterApi : TwitterAPI
+        +autenticar(user, token)
+        +postar(ConteudoUnificado) RespostaUnificada
+    }
+    class LinkedInAdapter {
+        -linkedInApi : LinkedInAPI
+        +autenticar(user, token)
+        +postar(ConteudoUnificado) RespostaUnificada
+    }
+    class InstagramAdapter {
+        -instagramApi : InstagramAPI
+        +autenticar(user, token)
+        +postar(ConteudoUnificado) RespostaUnificada
+    }
+    class TikTokAdapter {
+        -tikTokApi : TikTokAPI
+        +autenticar(user, token)
+        +postar(ConteudoUnificado) RespostaUnificada
+    }
+
+    TwitterAdapter ..|> ISocialMediaAdapter : implementa
+    LinkedInAdapter ..|> ISocialMediaAdapter : implementa
+    InstagramAdapter ..|> ISocialMediaAdapter : implementa
+    TikTokAdapter ..|> ISocialMediaAdapter : implementa
+
+    class TwitterAPI {
+        +autenticarComChave(apiKey)
+        +tweet(texto) String
+    }
+    class LinkedInAPI {
+        +conectar(user, pass) bool
+        +enviarUpdateProfissional(titulo, corpo) String
+    }
+    class InstagramAPI {
+        +login(user, pass) bool
+        +postarFoto(path, legenda) String
+    }
+    class TikTokAPI {
+        +autenticarToken(token)
+        +uploadVideo(path, som, hashtags) String
+    }
+
+    TwitterAdapter ..> TwitterAPI : adapta
+    LinkedInAdapter ..> LinkedInAPI : adapta
+    InstagramAdapter ..> InstagramAPI : adapta
+    TikTokAdapter ..> TikTokAPI : adapta
+
+    note for ISocialMediaAdapter "Interface Alvo (Target)"
+    note for GerenciadorMidiaSocial "Cliente (Client)"
+    note for TwitterAdapter "Adaptador (Adapter)"
+    note for TwitterAPI "Adaptado (Adaptee)"
